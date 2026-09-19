@@ -1,26 +1,122 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  /* the tabletop the ticket sits on */
+  --table: #333f2c;
+  --table-shadow: #1f271b;
+
+  /* the ticket paper itself */
+  --paper: #eef1e2;
+  --paper-line: #cad4b4;
+  --paper-edge: #dbe1c9;
+
+  /* ink + text */
+  --ink: #262b1c;
+  --ink-soft: #5c6650;
+  --ink-faint: #94a081;
+
+  /* the one bold accent: rubber-stamp red */
+  --stamp: #bf3623;
+  --stamp-dark: #96291a;
+  --stamp-ink: #fdf2ee;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-table: var(--table);
+  --color-paper: var(--paper);
+  --color-paper-line: var(--paper-line);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-stamp: var(--stamp);
+  --color-stamp-dark: var(--stamp-dark);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--table);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* the perforated tear-edge along the top of the ticket */
+.ticket-perforation {
+  height: 12px;
+  background-image: radial-gradient(circle at 6px 6px, var(--table) 4.5px, transparent 4.6px);
+  background-size: 12px 12px;
+  background-repeat: repeat-x;
+  background-position: top center;
+}
+
+/* faint ruled lines like a guest-check pad */
+.ticket-ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 34px,
+    var(--paper-line) 34px,
+    var(--paper-line) 35px
+  );
+}
+
+.dotted-leader {
+  border-bottom: 2px dotted var(--ink-faint);
+}
+
+@keyframes print {
+  0%,
+  100% {
+    transform: scaleX(0.4);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes stamp-down {
+  0% {
+    transform: scale(2.2) rotate(-14deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(0.94) rotate(-8deg);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1.05) rotate(-8deg);
+  }
+  100% {
+    transform: scale(1) rotate(-8deg);
+    opacity: 1;
+  }
+}
+
+.animate-stamp-down {
+  animation: stamp-down 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-stamp-down {
+    animation: none;
+  }
 }
